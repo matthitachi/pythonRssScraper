@@ -1,0 +1,89 @@
+<config>
+    <database>
+        <user>postgres</user>
+        <password>qwerty</password>
+        <host>127.0.0.1</host>
+        <port>5432</port>
+    </database>
+
+    <scraper>
+        <item>
+            <link>http://www.themarker.com/cmlink/1.144</link>
+            <sec_id>https://finance\.themarker\.com/quote/\?mador=1\&amp;documentId=(.*?)?\"</sec_id>
+            <instrumentid>0</instrumentid>
+            <data>
+                <header>self.soup.find(itemprop="headline").text</header>
+                <sub_header>self.soup.find(itemprop="description").text</sub_header>
+                <writer_name>self.soup.find(rel="author").text</writer_name>
+                <!--<writer-mail>2</writer-mail>-->
+                <date>self.soup.find("time", itemprop="datePublished").text</date>
+                <feedbacks>self.soup.select("ol > li[role=article]")</feedbacks>
+                <tag>self.soup.find_all('a', href=re.compile('https://finance\.themarker\.com/quote/\?mador=1\&amp;documentId=(.*?")'))</tag>
+            </data>
+        </item>
+        <item>
+            <link>https://www.globes.co.il/webservice/rss/rssfeeder.asmx/FeederNode?iID=2</link>
+            <sec_id>/portal/instrument\.aspx\?instrumentid=(.*?)?\"</sec_id>
+            <instrumentid>1</instrumentid>
+            <data>
+                <header>self.soup.find("h1", id="F_Title").text</header>
+                <sub_header>self.soup.find("h2", id="coteret_SubCoteretText").text</sub_header>
+                <writer_name>self.soup.select("div.articleInfo > a")[0].text</writer_name>
+                <writer_email>re.findall(r"[\w\.-]+@[\w\.-]+", self.soup.select("div.articleInfo > a")[0]["href"])[0]</writer_email>
+                <date>self.soup.select_one("div.articleInfo > span").text</date>
+                <!--<feedback>self.soup.select("ol > li[role=article]")</feedback>-->
+                <tag>self.soup.find_all('a', href=re.compile('/portal/instrument\.aspx\?instrumentid=(.*?)'))</tag>
+            </data>
+        </item>
+    <item>
+            <link>https://www.calcalist.co.il/GeneralRSS/0,16335,L-3674,00.xml</link>
+            <sec_id>/stocks/home/0,7340,L-3959-(.*?)?,</sec_id>
+            <instrumentid>0</instrumentid>
+            <data>
+                <header>self.soup.find("h1", class_="shahor ShualBold art-title").text</header>
+                <sub_header>self.soup.find("h2", class_="afor-kehe art-sub-title").text</sub_header>
+                <writer_name>self.soup.find("span", class_="shahor art-author").text</writer_name>
+                <writer_mail>re.findall(r"[\w\.-]+@[\w\.-]+", self.soup.select("div.art-launch-date > a")[0]["href"])[0]</writer_mail>
+                <date>self.soup.select("span.art-publish-date.afor > span")[1].text</date>
+                <time>self.soup.select("span.art-publish-date.afor > span")[0].text</time>
+                <!--feed back comment does not load with full page, they probably use json, so it doesnt  find it-->
+                <!--<feedback>self.soup.find("span", class_="tb-counter adom ShualBold").text.split(" ")[0]</feedback>-->
+                <tag>self.soup.find_all('a', href=re.compile('/stocks/home/0,7340,L-3959-(.*?)'))</tag>
+            </data>
+        </item>
+    <item>
+            <link>https://www.bizportal.co.il/shukhahon/messRss2.xml</link>
+            <sec_id>document.location.href='/capitalmarket/quote/generalview/(.*?)?'</sec_id>
+            <instrumentid>0</instrumentid>
+            <history>https://www.bizportal.co.il/capitalmarket/quote/news/694034</history>
+            <data>
+                <header>self.soup.find("h1", itemprop="headline").text</header>
+                <sub_header>self.soup.find("div", itemprop="description").text</sub_header>
+                <writer_name>eval('self.soup.select_one("address > a > span[itemprop=\'name\']").text').split('span')[0]</writer_name>
+                <!--<writer_mail>re.findall(r"[\w\.-]+@[\w\.-]+", self.soup.select("div.art-launch-date > a")[0]["href"])[0]</writer_mail>-->
+                <date>self.soup.select("time > span")[0].text</date>
+                <time>self.soup.select("time > span")[1].text</time>
+                <feedbacks>eval(self.soup.find("span", class_="count").text)</feedbacks>
+                <tag>self.soup.find_all(onclick=re.compile("document.location.href='/capitalmarket/quote/generalview/(.*?)'"))</tag>
+            </data>
+        </item>
+
+    <!--<item>-->
+            <!--<link>https://maya.tase.co.il/rss/maya.xml</link>-->
+            <!--<sec_id>document.location.href='/capitalmarket/quote/generalview/(.*?)?'</sec_id>-->
+            <!--<instrumentid>0</instrumentid>-->
+            <!--<data>-->
+                <!--<header>self.soup.find("h1", itemprop="headline").text</header>-->
+                <!--<sub-header>self.soup.find("div", itemprop="description").text</sub-header>-->
+                <!--<writer_name>self.soup.select_one("address > a > span[itemprop=\'name\']").text</writer_name>-->
+                <!--&lt;!&ndash;<writer_mail>re.findall(r"[\w\.-]+@[\w\.-]+", self.soup.select("div.art-launch-date > a")[0]["href"])[0]</writer_mail>&ndash;&gt;-->
+                <!--<date>self.soup.select("time > span")[0].text</date>-->
+                <!--<time>self.soup.select("time > span")[1].text</time>-->
+                <!--<feedback>eval(self.soup.find("span", class_="count").text)</feedback>-->
+                <!--<tag>self.soup.find_all(onclick=re.compile("document.location.href='/capitalmarket/quote/generalview/(.*?)'"))</tag>-->
+            <!--</data>-->
+        <!--</item>-->
+    </scraper>
+
+
+</config>
