@@ -107,24 +107,44 @@ class PdbModel :
         # print(data)
         columns = "("
         values = "("
+        params = "("
         for i in data:
             columns += i+","
-            values += "'"+data[i] +"',"
+            values += "'"+self.postgres_escape_string(data[i]) +"',"
+            params += "%s" +","
+
             # columns = "(" + ", ".join(i) + ")"
             # values = "(" + ", ".join(data[i]) + ")"
         columns =  columns.rstrip(',')+")"
-        values = values.rstrip(',')+")"
+        values = values+")"
+        params = params.rstrip(',')+")"
         # columns = "(" + ", ".join(data.keys()) + ")"
         # values = "(" + ", ".join(data.values()) + ")"
         # values2 = tuple(data.values())
-        sql = "insert into scrapedata "+ columns +" values " +values + " RETURNING id"
-        insertid = self.exec(sql)
+        print(eval(values))
+        sql = "insert into scrapedata "+ columns +" values " +params + " RETURNING id"
+        insertid = self.execute(sql, eval(values))
         if(tags):
-            self.insertTagsData(insertid, tags)
+            # print(self.getLastInsertID())
+            self.insertTagsData(self.getLastInsertID(), tags)
+        self.close()
 
+    def postgres_escape_string(self, s):
+        if not isinstance(s, str):
+            raise TypeError("%r must be a str or unicode" % (s,))
+        escaped = repr(s)
+        if isinstance(s, bytes):
+            assert escaped[:1] == 'u'
+            escaped = escaped[1:]
+        if escaped[:1] == '"':
+            escaped = escaped.replace("'", "\\'")
+        elif escaped[:1] != "'":
+            raise AssertionError("unexpected repr: %s", escaped)
+        return "%s" % (escaped[1:-1],)
 
-        print(insertid)
-        print(sql)
+    def getLastInsertID(self):
+        insertid = self.cursor.fetchone()[0]
+        return insertid
 
     def insertTagsData(self, insertId, tags):
         for tag in tags:
@@ -134,7 +154,7 @@ class PdbModel :
             dt= str('%d-%d-%d %d:%d:%d' % (
                 dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_min, dateobj.tm_sec))
             sql = "insert into atsecdata (article_id, sec_id, created_at) VALUES (%s, %s, %s)"
-            self.exec(sql, (insertId, dt, tag))
+            self.exec(sql, (insertId, tag, dt))
 
     def updateFeedback(self, count):
         sql = "Update scrapedata set feedbacks = '"+str(count)+"', ck_feedback = '1'"

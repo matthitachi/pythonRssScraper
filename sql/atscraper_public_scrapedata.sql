@@ -8,7 +8,7 @@ create table scrapedata
 		constraint scrapedata_pkey
 			primary key,
 	keywords text,
-	sub_header varchar(225),
+	sub_header text,
 	corp_id text,
 	url varchar(225),
 	website varchar(225),

@@ -36,7 +36,8 @@ class Xmlparser :
         password = db_congig.find('password').text
         host = db_congig.find('host').text
         port = db_congig.find('port').text
-        return {"user": username, "password":password, "host":host, "port":port}
+        database = db_congig.find('database').text
+        return {"user": username, "password":password, "host":host, "port":port, "database":database}
 
     def get_feedback_scrapeData(self, scrapedata):
         return scrapedata.find('feedbacks')

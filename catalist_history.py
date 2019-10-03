@@ -4,12 +4,14 @@ from scrapermodel import scraper
 import math
 # scraper = scraper
 xmlparser = Xmlparser()
-db = PdbModel('atscraper')
+
 
 
 
 # Get scraperconfig for this site
 get_config = xmlparser.get_scraper_config('config.xml')
+db_config = xmlparser.get_db_config('config.xml')
+db = PdbModel(db_config.get("database"))
 globes_config = xmlparser.sort_scraper_data(get_config[2])
 # print(globes_config)
 

@@ -5,12 +5,15 @@ import math
 import json
 # scraper = scraper
 xmlparser = Xmlparser()
-db = PdbModel('atscraper')
+# db = PdbModel('atscraper')
 
 
 
 # Get scraperconfig for this site
 get_config = xmlparser.get_scraper_config('config.xml')
+db_config = xmlparser.get_db_config('config.xml')
+db = PdbModel(db_config.get("database"))
+# print(db_config)
 globes_config = xmlparser.sort_scraper_data(get_config[3])
 # print(globes_config)
 

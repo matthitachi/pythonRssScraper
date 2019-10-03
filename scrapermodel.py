@@ -15,7 +15,9 @@ class scraper:
         self.scrapedata = scrapedata
         doc = self.get_doc(url)
         self.soup = BeautifulSoup(doc, 'lxml')
-        self.db = PdbModel('atscraper')
+        xmlparser = Xmlparser()
+        db_config = xmlparser.get_db_config('config.xml')
+        self.db = PdbModel(db_config.get("database"))
         # print(eval('self.soup.find(itemprop="headline").text'))
         # print(eval('self.soup.find(itemprop="description").text'))
         # print(eval('self.soup.find(rel="author").text'))
@@ -137,12 +139,12 @@ dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_mi
                     dbData['sec_id'] = str(len(data[i]))
                     tags = data[i]
                 elif(i == 'date'):
-                    if (data['time'] == None):
+                    if 'time' in data.keys():
                         dt = parser.parse(data[i])
                         date = dt.date()
                         times = dt.time()
-                        dbData['date'] = date
-                        dbData['time'] = times
+                        dbData['date'] = str(date)
+                        dbData['time'] = str(times)
                     else:
                         dbData['date'] = data[i]
                 else:

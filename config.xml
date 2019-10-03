@@ -1,6 +1,7 @@
 <config>
     <database>
         <user>postgres</user>
+        <database>atscraper</database>
         <password>qwerty</password>
         <host>127.0.0.1</host>
         <port>5432</port>
