@@ -91,7 +91,7 @@ class PdbModel :
         if (self.connection):
             self.cursor.close()
             self.connection.close()
-            print("PostgreSQL connection is closed")
+            # print("PostgreSQL connection is closed")
 
     def sortInstrumentId(self, insId):
         sql = "Select secid from instrumentids WHERE instrumentid = '%s'" % (str(insId))
@@ -124,6 +124,8 @@ class PdbModel :
         print(eval(values))
         sql = "insert into scrapedata "+ columns +" values " +params + " RETURNING id"
         insertid = self.execute(sql, eval(values))
+        self.connection.commit()
+        print(sql, values)
         if(tags):
             # print(self.getLastInsertID())
             self.insertTagsData(self.getLastInsertID(), tags)

@@ -69,7 +69,7 @@ class scraper:
             # print(str(a))
             chec = re.findall(r""+sec+"", str(a))
             if (int(self.scrapedata['instrumentid'])):
-                print("Check for Instrument ID", self.scrapedata['instrumentid'])
+                # print("Check for Instrument ID", self.scrapedata['instrumentid'])
                 chec = self.db.sortInstrumentId(chec[0])
             if(chec):
                 alltags.append(chec[0])

@@ -21,8 +21,10 @@ for insID in allInstrumenIDs :
     instrumentId =insID[1]
     # print(insID[1])
     history_url = "https://www.globes.co.il/portal/instrument.aspx?instrumentid="+instrumentId+"&mode=news"
-    document = scraper.get_doc(scraper,history_url)
+    print("URL: "+ history_url)
+    document = scraper.get_doc(scraper, history_url)
     article_links = scraper.get_history_links(scraper, document, 'self.soup.select(".mainArticletitle > a")')
+    print("Records: " + str(len(article_links)))
     for at_link in article_links:
         # print(at_link['href'])
         if(at_link):
