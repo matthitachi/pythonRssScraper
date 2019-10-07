@@ -13,6 +13,7 @@ import time
 class scraper:
     def __init__(self, url, scrapedata):
         self.scrapedata = scrapedata
+        self.url = url
         doc = self.get_doc(url)
         self.soup = BeautifulSoup(doc, 'lxml')
         xmlparser = Xmlparser()
@@ -25,14 +26,14 @@ class scraper:
         # print(len(eval('self.soup.select("ol > li[role=article]")')))
 
     def test(self):
-      print(eval('self.soup.find("h1", itemprop="headline").text'))
-      print(eval('self.soup.find("div", itemprop="description").text'))
-      # print(eval('self.soup.find("span", class_="shahor art-author").text'))
-      print(eval('self.soup.select_one("address > a > span[itemprop=\'name\']").text').split('span')[0])
+      # print(eval('re.findall(r"[\w\.-]+@[\w\.-]+", self.soup.select("div.articleInfo > a")[0]["href"])[0]'))
+      print(eval('self.soup.select_one("div.articleInfo > span.timestamp").text'))
+      print(eval('(self.soup.select("div.articleInfo > a")) and self.soup.select("div.articleInfo > a")[0].text or self.soup.select_one("div.articleInfo > span").text'))
+      # print(eval('self.soup.select("div.articleInfo > a")[0].text'))
       # print(eval('self.soup.find("span", class_="tb-counter adom ShualBold")'))
-      print(eval('self.soup.select("time > span")[0].text'))
-      print(eval('self.soup.select("time > span")[1].text'))
-      print(eval('eval(self.soup.find("span", class_="count").text)'))
+      # print(eval('self.soup.select("time > span")[0].text'))
+      # print(eval('self.soup.select("time > span")[1].text'))
+      # print(eval('eval(self.soup.find("span", class_="count").text)'))
       # print(eval('self.soup.find("span", class_="count").text'))
       # print(eval('self.soup.select_one("div.articleInfo > span").text'))
       # print(eval('re.findall(r"[\w\.-]+@[\w\.-]+", self.soup.select("div.art-launch-date > a")[0]["href"])[0]'))
@@ -122,7 +123,8 @@ class scraper:
         # print(data)
         #{'link': 'https://www.bizportal.co.il/shukhahon/messRss2.xml', 'instrumentid': '0', 'sec_id': "document.location.href='/capitalmarket/quote/generalview/(.*?)?'", 'scrape': {'header': 'self.soup.find("h1", itemprop="headline").text', 'sub-header': 'self.soup.find("div", itemprop="description").text', 'writer_name': 'self.soup.select_one("address > a > span[itemprop=\\\'name\\\']").text', 'date': 'self.soup.select("time > span")[0].text', 'time': 'self.soup.select("time > span")[1].text', 'feedbacks': 'eval(self.soup.find("span", class_="count").text)', 'tag': 'self.soup.find_all(onclick=re.compile("document.location.href=\'/capitalmarket/quote/generalview/(.*?)\'"))'}}
         dbData = {}
-        url = self.scrapedata['link']
+        # url = self.scrapedata['link']
+        url = self.url
         # parsed_uri = urlparse('url')
         website = url.split("://")[1].split("/")[0]
         dbData['url'] = url
@@ -165,3 +167,6 @@ dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_mi
 # scrap.trystuff()
 # scrap.test_secid()
 # print(scrap.find_secid("self.soup.find_all('a', href=re.compile('/stocks/home/0,7340,L-3959-(.*?)'))", '/stocks/home/0,7340,L-3959-(.*?)?,'))
+
+# scrapr = scraper('https://www.globes.co.il/news/article.aspx?did=1001296434', {})
+# scrapr.test()

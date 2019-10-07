@@ -29,9 +29,9 @@
             <data>
                 <header>self.soup.find("h1", id="F_Title").text</header>
                 <sub_header>self.soup.find("h2", id="coteret_SubCoteretText").text</sub_header>
-                <writer_name>self.soup.select("div.articleInfo > a")[0].text</writer_name>
+                <writer_name>(self.soup.select("div.articleInfo > a")) and self.soup.select("div.articleInfo > a")[0].text or self.soup.select_one("div.articleInfo > span").text</writer_name>
                 <writer_email>re.findall(r"[\w\.-]+@[\w\.-]+", self.soup.select("div.articleInfo > a")[0]["href"])[0]</writer_email>
-                <date>self.soup.select_one("div.articleInfo > span").text</date>
+                <date>self.soup.select_one("div.articleInfo > span.timestamp").text</date>
                 <!--<feedback>self.soup.select("ol > li[role=article]")</feedback>-->
                 <tag>self.soup.find_all('a', href=re.compile('/portal/instrument\.aspx\?instrumentid=(.*?)'))</tag>
             </data>
