@@ -17,7 +17,7 @@ def scrape_Rss_Links(links, scrapedata):
             continue
         else:
             scraper_obj.get_data()
-        break
+
             # print(scraper_obj.get_data())
 
 

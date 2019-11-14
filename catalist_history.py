@@ -16,10 +16,10 @@ globes_config = xmlparser.sort_scraper_data(get_config[2])
 # print(globes_config)
 
 # get all Instrumement id
-sql = 'Select * from instrumentids'
+sql = 'Select * from securities'
 allInstrumenIDs = db.fetchall(sql)
 for insID in allInstrumenIDs :
-    instrumentId =insID[2]
+    instrumentId =insID[0]
     # print(insID[1])
     history_xml = "https://www.calcalist.co.il/Ext/Comp/Allday/CdaStockNews_Xml/0,15250,L-"+instrumentId+"-1-0-1-249,00.xml"
     # https: // www.calcalist.co.il / Ext / Comp / Allday / CdaStockNews_Xml / 0, 15250, L - 604611 - 1 - 0 - 71 - 353, 0

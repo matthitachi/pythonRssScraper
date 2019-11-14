@@ -24,7 +24,7 @@
                 <writer_name>self.soup.find(rel="author").text</writer_name>
                 <!--<writer-mail>2</writer-mail>-->
                 <date>self.soup.find("time", itemprop="datePublished").text</date>
-                <feedbacks>self.soup.select("ol > li[role=article]")</feedbacks>
+                <feedbacks>len(self.soup.select("ol#comments > li[role=article]"))</feedbacks>
                 <tag>self.soup.find_all('a', href=re.compile('https://finance\.themarker\.com/quote/\?mador=1\&amp;documentId=(.*?")'))</tag>
             </data>
         </item>

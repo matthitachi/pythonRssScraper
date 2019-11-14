@@ -167,19 +167,20 @@ dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_mi
                     tags = data[i]
                 elif(i == 'date'):
                     if 'time' in data.keys():
-                        dt = parser.parse(data[i])
+                        dt = parser.parse(data[i],dayfirst=True)
                         date = dt.date()
                         times = dt.time()
                         dbData['date'] = str(date)
                         dbData['time'] = str(times)
                     else:
-                        dbData['date'] =  str(parser.parse(data[i]))
+                        dbData['date'] =  str(parser.parse(data[i],dayfirst=True))
                 else:
                     dbData[i] = str(data[i])
 
         self.db.insertScrapeData(dbData, tags)
 
-
+    def testParser(self, dt):
+        return str(parser.parse(dt,dayfirst=True))
 
 
 
@@ -192,5 +193,5 @@ dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_mi
 # print(scrap.find_secid("self.soup.find_all('a', href=re.compile('/stocks/home/0,7340,L-3959-(.*?)'))", '/stocks/home/0,7340,L-3959-(.*?)?,'))
 
 # scrapr = scraper('https://www.calcalist.co.il/markets/articles/0,7340,L-3771999,00.html', {})
-#
-# print(scrapr.find_secid("self.soup.find_all('a', href=re.compile('/stocks/home/0,7340,L-3959-(.*?)'))", "/stocks/home/0,7340,L-3959-(.*?)?,"))
+# #
+# print(scrapr.testParser('17.10.19'))
