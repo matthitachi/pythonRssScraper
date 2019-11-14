@@ -173,7 +173,7 @@ dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_mi
                         dbData['date'] = str(date)
                         dbData['time'] = str(times)
                     else:
-                        dbData['date'] = data[i]
+                        dbData['date'] =  str(parser.parse(data[i]))
                 else:
                     dbData[i] = str(data[i])
 
