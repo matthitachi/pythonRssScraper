@@ -12,7 +12,9 @@ class Xmlparser :
         # for type_tag in root_xml.findall('channel/item/link'):
         #     value = type_tag.text
         #     print(value)
-
+    def get_rss_xml(self, path):
+        root_xml = ET.parse(path).getroot()
+        return root_xml.findall('channel/item')
 
     def get_scraper_config(self, path):
         config_xml = ET.parse(path).getroot()

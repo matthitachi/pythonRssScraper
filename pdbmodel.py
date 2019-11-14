@@ -103,6 +103,11 @@ class PdbModel :
         result = self.fetchone(sql)
         return result
 
+    def sortSecId(self, corpId):
+        sql = "Select sec_id from securities WHERE corp_id = '%s'" % (str(corpId))
+        result = self.fetchone(sql)
+        return result
+
     def articleExist(self, link):
         sql = "Select * from scrapedata WHERE url = '%s'" % (link)
         result = self.fetchone(sql)
