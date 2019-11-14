@@ -1,8 +1,8 @@
 <config>
     <database>
         <user>postgres</user>
-        <database>atscraper</database>
-        <password>qwerty</password>
+        <database>postgres</database>
+        <password>dror9519</password>
         <host>127.0.0.1</host>
         <port>5432</port>
     </database>
@@ -12,6 +12,7 @@
             <link>http://www.themarker.com/cmlink/1.144</link>
             <sec_id>https://finance\.themarker\.com/quote/\?mador=1\&amp;documentId=(.*?)?\"</sec_id>
             <instrumentid>0</instrumentid>
+            <article_sec>re.findall(r"\d+$", str(self.url))[0]</article_sec>
             <data>
                 <header>self.soup.find(itemprop="headline").text</header>
                 <sub_header>self.soup.find(itemprop="description").text</sub_header>
@@ -25,6 +26,7 @@
         <item>
             <link>https://www.globes.co.il/webservice/rss/rssfeeder.asmx/FeederNode?iID=2</link>
             <sec_id>/portal/instrument\.aspx\?instrumentid=(.*?)?\"</sec_id>
+            <article_sec>re.findall(r"\d+$", str(self.url))[0]</article_sec>
             <instrumentid>1</instrumentid>
             <data>
                 <header>self.soup.find("h1", id="F_Title").text</header>
@@ -39,6 +41,7 @@
     <item>
             <link>https://www.calcalist.co.il/GeneralRSS/0,16335,L-3674,00.xml</link>
             <sec_id>/stocks/home/0,7340,L-3959-(.*?)?,</sec_id>
+            <article_sec>re.findall(r"L.*?(?=(?:,)|$)", str(self.url))[0].split('-')[-1]</article_sec>
             <instrumentid>0</instrumentid>
             <data>
                 <header>self.soup.find("h1", class_="shahor ShualBold art-title").text</header>
@@ -55,6 +58,7 @@
     <item>
             <link>https://www.bizportal.co.il/shukhahon/messRss2.xml</link>
             <sec_id>document.location.href='/capitalmarket/quote/generalview/(.*?)?'</sec_id>
+            <article_sec>re.findall(r"\d+$", str(self.url))[0]</article_sec>
             <instrumentid>0</instrumentid>
             <history>https://www.bizportal.co.il/capitalmarket/quote/news/694034</history>
             <data>

@@ -150,13 +150,14 @@ class PdbModel :
 
     def insertTagsData(self, insertId, tags):
         for tag in tags:
-            import time
-            secondsSinceEpoch = time.time()
-            dateobj = time.localtime(secondsSinceEpoch)
-            dt= str('%d-%d-%d %d:%d:%d' % (
-                dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_min, dateobj.tm_sec))
-            sql = "insert into atsecdata (article_id, sec_id, created_at) VALUES (%s, %s, %s)"
-            self.exec(sql, (insertId, tag, dt))
+            if tag:
+                import time
+                secondsSinceEpoch = time.time()
+                dateobj = time.localtime(secondsSinceEpoch)
+                dt= str('%d-%d-%d %d:%d:%d' % (
+                    dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_min, dateobj.tm_sec))
+                sql = "insert into atsecdata (article_id, sec_id, created_at) VALUES (%s, %s, %s)"
+                self.exec(sql, (insertId, tag, dt))
 
     def updateFeedback(self, count):
         sql = "Update scrapedata set feedbacks = '"+str(count)+"', ck_feedback = '1'"

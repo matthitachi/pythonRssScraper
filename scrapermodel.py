@@ -19,6 +19,7 @@ class scraper:
         xmlparser = Xmlparser()
         db_config = xmlparser.get_db_config('config.xml')
         self.db = PdbModel(db_config.get("database"))
+        # print(self.gerUrlSec_id())
         # print(eval('self.soup.find(itemprop="headline").text'))
         # print(eval('self.soup.find(itemprop="description").text'))
         # print(eval('self.soup.find(rel="author").text'))
@@ -62,6 +63,7 @@ class scraper:
         result = eval(code)
         # print(result)
         alltags = []
+        alltags.append(self.gerUrlSec_id())
         # links = [re.findall(r""+sec+"", str(a))[0] for a in result]
         # chec = re.findall(r"https://finance\.themarker\.com/quote/\?mador=1\&amp;documentId=(.*?)?\"", '<a data-mador-id="1" data-section-id="" href="https://finance.themarker.com/quote/?mador=1&amp;documentId=1131523" target="_blank">מגדלי הים התיכון</a>')
         # chec = re.findall(r"https://finance\.themarker\.com/quote/\?mador=1\&amp;documentId=(.*?)?\"", str(chec[0]))
@@ -69,44 +71,62 @@ class scraper:
         for a in result:
             # print(str(a))
             chec = re.findall(r""+sec+"", str(a))
-            if (int(self.scrapedata['instrumentid'])):
+            chec = self.checkInstrumentID(chec[0])
+            # if (int(self.scrapedata['instrumentid'])):
                 # print("Check for Instrument ID", self.scrapedata['instrumentid'])
-                chec = self.db.sortInstrumentId(chec[0])
+                # chec = self.db.sortInstrumentId(chec[0])
             if(chec):
                 alltags.append(chec[0])
 
-        return  alltags
+        return list( dict.fromkeys(alltags) )
         # print(chec)
+    def checkInstrumentID(self, id):
+        if (int(self.scrapedata['instrumentid'])):
+            # print("Check for Instrument ID", self.scrapedata['instrumentid'])
+            id = self.db.sortInstrumentId(id)
+        return id
 
+    def gerUrlSec_id(self):
+        sec_id = eval(self.scrapedata['article_sec'])
+        
+        print('secid' + str(self.url))
+        print('secid' + str(sec_id))
+        # sec_id = self.checkInstrumentID(sec_id[0])
+        # print(sec_id)
+        # return  sec_id[0]
     def test_secid(self):
         chec = self.soup.find_all(onclick=re.compile("document.location.href='/capitalmarket/quote/generalview/(.*?)'"))
         chec = re.findall(r"document.location.href='/capitalmarket/quote/generalview/(.*?)?'", str(chec[0]))
         print(chec)
 
     def get_data(self):
-        data_text = {}
-        # print(self.scrapedata['scrape'])
+        if self.db.articleExist(self.url):
+            return
+        else :
+            data_text = {}
+            # print(self.scrapedata['scrape'])
 
-        # if(1):
-        for i in self.scrapedata['scrape']:
-            try:
-                tag = i
-                text = self.scrapedata['scrape'][i]
-                result = {}
-                if (tag == 'tag'):
-                    res = self.find_secid(text, self.scrapedata['sec_id'])
+            # if(1):
+            for i in self.scrapedata['scrape']:
+                try:
+                    tag = i
+                    text = self.scrapedata['scrape'][i]
+                    result = {}
+                    if (tag == 'tag'):
+                        res = self.find_secid(text, self.scrapedata['sec_id'])
 
-                elif (tag == 'feedback'):
-                    res = len(eval(text))
-                else:
-                    res = eval(text)
+                    elif (tag == 'feedback'):
+                       res = len(eval(text))
+                    else:
+                        res = eval(text)
 
-                data_text[tag] = res
-            except AttributeError:
-                data_text[tag] = None
-            except Exception:
-                data_text[tag] = None
-        self.compute(data_text)
+                    data_text[tag] = res
+                except AttributeError:
+                    data_text[tag] = None
+                except Exception:
+                    data_text[tag] = None
+            # print(data_text)
+            self.compute(data_text)
 
     def get_history_links(self, doc, code):
         self.soup = BeautifulSoup(doc, 'lxml')
@@ -169,4 +189,4 @@ dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_mi
 # print(scrap.find_secid("self.soup.find_all('a', href=re.compile('/stocks/home/0,7340,L-3959-(.*?)'))", '/stocks/home/0,7340,L-3959-(.*?)?,'))
 
 # scrapr = scraper('https://www.globes.co.il/news/article.aspx?did=1001296434', {})
-# scrapr.test()
+# scrapr.gerUrlSec_id()

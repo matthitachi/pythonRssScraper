@@ -22,12 +22,13 @@ class Xmlparser :
         check = {}
         rss_link = data.find('link').text
         instrumentid = data.find('instrumentid').text
+        article_sec = data.find('article_sec').text
         sec_id = data.find('sec_id').text
         scraping_data = data.find('data')
         for sdata in scraping_data:
             check[sdata.tag] = sdata.text
 
-        return  {'link': rss_link, 'instrumentid': instrumentid, 'sec_id': sec_id, 'scrape':check}
+        return {'link': rss_link, 'instrumentid': instrumentid, 'sec_id': sec_id, 'article_sec': article_sec, 'scrape': check}
 
     def get_db_config(self, path):
         config_xml = ET.parse(path).getroot()
