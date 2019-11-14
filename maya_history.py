@@ -1,7 +1,7 @@
 from xmlparser import Xmlparser
 from pdbmodel import PdbModel
 from scrapermodel import scraper
-# from maya import Maya
+from maya import Maya
 # scraper = scraper
 xmlparser = Xmlparser()
 # db = PdbModel('atscraper')
@@ -30,11 +30,11 @@ for insID in allInstrumenIDs :
             link = "https://maya.tase.co.il/"+at_link['href']
             header = at_link.text
             print("Header and Link", header, link)
-            # scraper_obj = scraper('maya.html', {})
-            # if (scraper_obj.db.articleExist(link)):
-            #     continue
-            # else:
-                # Maya.scrapeMaya(scraper_obj, header)
+            scraper_obj = scraper('maya.html', {})
+            if (scraper_obj.db.articleExist(link)):
+                continue
+            else:
+                Maya.scrapeMaya(Maya, scraper_obj, link, header)
 
 
     break

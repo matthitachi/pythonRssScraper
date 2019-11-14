@@ -13,14 +13,14 @@ from dateutil import parser
 from datetime import datetime
 
 import time
-xmlparser = Xmlparser()
+
 
 class Maya():
     def __init__(self):
         xmlparser = Xmlparser()
         db_config = xmlparser.get_db_config('config.xml')
         self.pdbmodel = PdbModel(db_config.get("database"))
-    def scrapeMaya(self, scraper_obj, header):
+    def scrapeMaya(self, scraper_obj, link,  header):
         scraper_obj = scraper_obj
         soup = scraper_obj.soup
         # soup = BeautifulSoup(open("C:\\Users/ITACHI\\PycharmProjects\\Atscraper\\maya.html", encoding="utf8").read(), 'lxml')
@@ -73,17 +73,7 @@ class Maya():
                 sql = "insert into atsecdata (article_id, sec_id, created_at, crop_id) VALUES (%s, %s, %s, %s)"
                 self.pdbmodel.exec(sql, (insertId, sec_id, dt, tag))
 
-rss_link = 'https://maya.tase.co.il/rss/maya.xml'
-rss_xml = xmlparser.get_rss_xml('maya.xml')
-for item in rss_xml:
-    link = item.find('link').text
-    header = item.find('title').text.split('-')[-1]
-    print(header)
-    scraper_obj = scraper('maya.html', {})
-    if (scraper_obj.db.articleExist(link)):
-        continue
-    else:
-        Maya.scrapeMaya(scraper_obj, header)
+
 
 
 

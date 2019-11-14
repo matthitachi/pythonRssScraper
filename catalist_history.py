@@ -16,7 +16,7 @@ globes_config = xmlparser.sort_scraper_data(get_config[2])
 # print(globes_config)
 
 # get all Instrumement id
-sql = 'Select * from securities'
+sql = 'Select sec_id from securities'
 allInstrumenIDs = db.fetchall(sql)
 for insID in allInstrumenIDs :
     instrumentId =insID[0]
@@ -24,6 +24,7 @@ for insID in allInstrumenIDs :
     history_xml = "https://www.calcalist.co.il/Ext/Comp/Allday/CdaStockNews_Xml/0,15250,L-"+instrumentId+"-1-0-1-249,00.xml"
     # https: // www.calcalist.co.il / Ext / Comp / Allday / CdaStockNews_Xml / 0, 15250, L - 604611 - 1 - 0 - 71 - 353, 0
     # history_url = "https://www.calcalist.co.il/stocks/home/0,7340,L-3959-"+instrumentId+"--4,00.html"
+    print(history_xml)
     document = scraper.get_doc(scraper, history_xml)
     doc = xmlparser.get_any_xml(document)
     total_at = int(xmlparser.get_xml_find(doc, 'total').text)
