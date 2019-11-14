@@ -1,7 +1,7 @@
 from xmlparser import Xmlparser
 from pdbmodel import PdbModel
 from scrapermodel import scraper
-from maya import Maya
+# from maya import Maya
 # scraper = scraper
 xmlparser = Xmlparser()
 # db = PdbModel('atscraper')
