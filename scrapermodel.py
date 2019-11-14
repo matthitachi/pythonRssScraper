@@ -28,8 +28,8 @@ class scraper:
 
     def test(self):
       # print(eval('re.findall(r"[\w\.-]+@[\w\.-]+", self.soup.select("div.articleInfo > a")[0]["href"])[0]'))
-      print(eval('self.soup.select_one("div.articleInfo > span.timestamp").text'))
-      print(eval('(self.soup.select("div.articleInfo > a")) and self.soup.select("div.articleInfo > a")[0].text or self.soup.select_one("div.articleInfo > span").text'))
+      return eval("self.soup.find_all('a', href=re.compile('/stocks/home/0,7340,L-3959-(.*?)'))")
+      # print(eval('(self.soup.select("div.articleInfo > a")) and self.soup.select("div.articleInfo > a")[0].text or self.soup.select_one("div.articleInfo > span").text'))
       # print(eval('self.soup.select("div.articleInfo > a")[0].text'))
       # print(eval('self.soup.find("span", class_="tb-counter adom ShualBold")'))
       # print(eval('self.soup.select("time > span")[0].text'))
@@ -63,7 +63,7 @@ class scraper:
         result = eval(code)
         # print(result)
         alltags = []
-        alltags.append(self.gerUrlSec_id())
+        # alltags.append(self.gerUrlSec_id())
         # links = [re.findall(r""+sec+"", str(a))[0] for a in result]
         # chec = re.findall(r"https://finance\.themarker\.com/quote/\?mador=1\&amp;documentId=(.*?)?\"", '<a data-mador-id="1" data-section-id="" href="https://finance.themarker.com/quote/?mador=1&amp;documentId=1131523" target="_blank">מגדלי הים התיכון</a>')
         # chec = re.findall(r"https://finance\.themarker\.com/quote/\?mador=1\&amp;documentId=(.*?)?\"", str(chec[0]))
@@ -71,19 +71,23 @@ class scraper:
         for a in result:
             # print(str(a))
             chec = re.findall(r""+sec+"", str(a))
-            chec = self.checkInstrumentID(chec[0])
+
+            chec = self.checkInstrumentID(chec)
             # if (int(self.scrapedata['instrumentid'])):
                 # print("Check for Instrument ID", self.scrapedata['instrumentid'])
                 # chec = self.db.sortInstrumentId(chec[0])
             if(chec):
                 alltags.append(chec[0])
 
-        return list( dict.fromkeys(alltags) )
+        alltags = list( dict.fromkeys(alltags) )
+        # print('TAGS ==>', alltags)
+        return alltags
+
         # print(chec)
     def checkInstrumentID(self, id):
         if (int(self.scrapedata['instrumentid'])):
             # print("Check for Instrument ID", self.scrapedata['instrumentid'])
-            id = self.db.sortInstrumentId(id)
+            id = self.db.sortInstrumentId(id[0])
         return id
 
     def gerUrlSec_id(self):
@@ -114,6 +118,7 @@ class scraper:
                     result = {}
                     if (tag == 'tag'):
                         res = self.find_secid(text, self.scrapedata['sec_id'])
+
 
                     elif (tag == 'feedback'):
                        res = len(eval(text))
@@ -172,8 +177,6 @@ dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_mi
                 else:
                     dbData[i] = str(data[i])
 
-
-
         self.db.insertScrapeData(dbData, tags)
 
 
@@ -188,5 +191,6 @@ dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_mi
 # scrap.test_secid()
 # print(scrap.find_secid("self.soup.find_all('a', href=re.compile('/stocks/home/0,7340,L-3959-(.*?)'))", '/stocks/home/0,7340,L-3959-(.*?)?,'))
 
-# scrapr = scraper('https://www.globes.co.il/news/article.aspx?did=1001296434', {})
-# scrapr.gerUrlSec_id()
+# scrapr = scraper('https://www.calcalist.co.il/markets/articles/0,7340,L-3771999,00.html', {})
+#
+# print(scrapr.find_secid("self.soup.find_all('a', href=re.compile('/stocks/home/0,7340,L-3959-(.*?)'))", "/stocks/home/0,7340,L-3959-(.*?)?,"))

@@ -98,6 +98,11 @@ class PdbModel :
         result = self.fetchone(sql)
         return result
 
+    def sortCropId(self, secId):
+        sql = "Select corp_id from securities WHERE sec_id = '%s'" % (str(secId))
+        result = self.fetchone(sql)
+        return result
+
     def articleExist(self, link):
         sql = "Select * from scrapedata WHERE url = '%s'" % (link)
         result = self.fetchone(sql)
@@ -154,10 +159,11 @@ class PdbModel :
                 import time
                 secondsSinceEpoch = time.time()
                 dateobj = time.localtime(secondsSinceEpoch)
+                crop_id = str(self.sortCropId(tag)[0])
                 dt= str('%d-%d-%d %d:%d:%d' % (
                     dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_min, dateobj.tm_sec))
-                sql = "insert into atsecdata (article_id, sec_id, created_at) VALUES (%s, %s, %s)"
-                self.exec(sql, (insertId, tag, dt))
+                sql = "insert into atsecdata (article_id, sec_id, created_at, crop_id) VALUES (%s, %s, %s, %s)"
+                self.exec(sql, (insertId, tag, dt, crop_id))
 
     def updateFeedback(self, count):
         sql = "Update scrapedata set feedbacks = '"+str(count)+"', ck_feedback = '1'"
