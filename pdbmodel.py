@@ -159,7 +159,8 @@ class PdbModel :
                 import time
                 secondsSinceEpoch = time.time()
                 dateobj = time.localtime(secondsSinceEpoch)
-                crop_id = str(self.sortCropId(tag)[0])
+                crop_id = self.sortCropId(tag)
+                crop_id = crop_id[0] if crop_id else None
                 dt= str('%d-%d-%d %d:%d:%d' % (
                     dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_min, dateobj.tm_sec))
                 sql = "insert into atsecdata (article_id, sec_id, created_at, crop_id) VALUES (%s, %s, %s, %s)"

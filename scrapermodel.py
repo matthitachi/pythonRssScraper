@@ -80,7 +80,7 @@ class scraper:
                 alltags.append(chec[0])
 
         alltags = list( dict.fromkeys(alltags) )
-        # print('TAGS ==>', alltags)
+        print('TAGS ==>', alltags)
         return alltags
 
         # print(chec)
