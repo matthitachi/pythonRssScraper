@@ -1,9 +1,14 @@
 <config>
     <database>
+        <!--<user>postgres</user>-->
+        <!--<database>atscraper</database>-->
+        <!--<password>qwerty</password>-->
+        <!--<host>127.0.0.1</host>-->
+        <!--<port>5432</port>-->
         <user>postgres</user>
         <database>postgres</database>
         <password>dror9519</password>
-        <host>127.0.0.1</host>
+        <host>35.195.17.82</host>
         <port>5432</port>
     </database>
 
@@ -47,7 +52,7 @@
                 <header>self.soup.find("h1", class_="shahor ShualBold art-title").text</header>
                 <sub_header>self.soup.find("h2", class_="afor-kehe art-sub-title").text</sub_header>
                 <writer_name>self.soup.find("span", class_="shahor art-author").text</writer_name>
-                <writer_mail>re.findall(r"[\w\.-]+@[\w\.-]+", self.soup.select("div.art-launch-date > a")[0]["href"])[0]</writer_mail>
+                <writer_email>re.findall(r"[\w\.-]+@[\w\.-]+", self.soup.select("div.art-launch-date > a")[0]["href"])[0]</writer_email>
                 <date>self.soup.select("span.art-publish-date.afor > span")[1].text</date>
                 <time>self.soup.select("span.art-publish-date.afor > span")[0].text</time>
                 <!--feed back comment does not load with full page, they probably use json, so it doesnt  find it-->
