@@ -3,16 +3,17 @@ from pdbmodel import PdbModel
 from scrapermodel import scraper
 import math
 import json
+from Logger import logger
 # scraper = scraper
 xmlparser = Xmlparser()
 # db = PdbModel('atscraper')
 
 
-
+logger = logger('bizportal_history.log')
 # Get scraperconfig for this site
 get_config = xmlparser.get_scraper_config('config.xml')
 db_config = xmlparser.get_db_config('config.xml')
-db = PdbModel(db_config.get("database"))
+db = PdbModel(db_config.get("database"), 'bizportal_history.log')
 # print(db_config)
 globes_config = xmlparser.sort_scraper_data(get_config[3])
 # print(globes_config)
@@ -22,7 +23,7 @@ sql = 'Select * from instrumentids'
 allInstrumenIDs = db.fetchall(sql)
 for insID in allInstrumenIDs :
     instrumentId =insID[2]
-    # print(insID[1])
+    logger.info('instriment Id ' + instrumentId )
     history_xml = "https://www.bizportal.co.il/capitalmarket/quote/AjaxRequests/SectorNews_Ajax?paperId="+instrumentId
     # https: // www.calcalist.co.il / Ext / Comp / Allday / CdaStockNews_Xml / 0, 15250, L - 604611 - 1 - 0 - 71 - 353, 0
     # history_url = "https://www.calcalist.co.il/stocks/home/0,7340,L-3959-"+instrumentId+"--4,00.html"
@@ -46,7 +47,7 @@ for insID in allInstrumenIDs :
             for item in items:
                 link = item['ArticleLink']
                 # print(link)
-                scrape = scraper(link, globes_config)
+                scrape = scraper(link, globes_config, 'bizportal_history.log')
                 scrape.get_data()
     #
     #

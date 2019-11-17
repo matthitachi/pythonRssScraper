@@ -1,12 +1,15 @@
 import psycopg2
 import psycopg2.extras
+
+from Logger import logger
 from xmlparser import Xmlparser
 
 class PdbModel :
 
-    def __init__(self, database):
+    def __init__(self, database, logfile=None):
         self.db_settings = Xmlparser.get_db_config(Xmlparser, 'config.xml')
         self.database = database
+        self.logger = logger(logfile)
 
 
     def open(self):
@@ -24,7 +27,7 @@ class PdbModel :
             record = self.cursor.fetchone()
             # print("You are connected to - ", record,"\n")
         except (Exception, psycopg2.Error) as error :
-            print ("Error while connecting to PostgreSQL", error)
+            self.logger.error("Error while connecting to PostgreSQL"+ str(error))
 
     def execute(self, sql, option=None):
         self.open()
@@ -41,9 +44,9 @@ class PdbModel :
             self.connection.commit()
         except Exception as e :
             # Rollback in case there is any error
-            print("An error occurred in exec method")
+            self.logger.error("An error occurred in exec method")
             self.connection.rollback()
-            print(e)
+            self.logger.error(e)
             result = None
 
         finally:
@@ -60,8 +63,8 @@ class PdbModel :
 
         except Exception as e:
             # Rollback in case there is any error
-            print('An error occured in fetch one method')
-            print(e)
+            self.logger.error('An error occured in fetch one method')
+            self.logger.error(e)
             result = None
 
         finally:
@@ -79,8 +82,8 @@ class PdbModel :
 
         except Exception as e:
             # Rollback in case there is any error
-            print('An error occured in feetchall method')
-            print(e)
+            self.logger.error('An error occured in feetchall method')
+            self.logger.error(e)
             result = None
 
         finally:
@@ -131,11 +134,11 @@ class PdbModel :
         # columns = "(" + ", ".join(data.keys()) + ")"
         # values = "(" + ", ".join(data.values()) + ")"
         # values2 = tuple(data.values())
-        print(eval(values))
+        # self.logger.error(eval(values))
         sql = "insert into scrapedata "+ columns +" values " +params + " RETURNING id"
         insertid = self.execute(sql, eval(values))
         self.connection.commit()
-        print(sql, values)
+        # self.logger.info(sql+"\n" +values)
         if(tags):
             # print(self.getLastInsertID())
             self.insertTagsData(self.getLastInsertID(), tags)

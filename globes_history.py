@@ -1,16 +1,17 @@
 from xmlparser import Xmlparser
 from pdbmodel import PdbModel
 from scrapermodel import scraper
+from Logger import logger
 # scraper = scraper
 xmlparser = Xmlparser()
 # db = PdbModel('atscraper')
-
+logger = logger('globes_history.log')
 
 
 # Get scraperconfig for this site
 get_config = xmlparser.get_scraper_config('config.xml')
 db_config = xmlparser.get_db_config('config.xml')
-db = PdbModel(db_config.get("database"))
+db = PdbModel(db_config.get("database"), 'globes_history.log')
 globes_config = xmlparser.sort_scraper_data(get_config[1])
 # print(globes_config)
 
@@ -21,14 +22,14 @@ for insID in allInstrumenIDs :
     instrumentId =insID[1]
     # print(insID[1])
     history_url = "https://www.globes.co.il/portal/instrument.aspx?instrumentid="+instrumentId+"&mode=news"
-    print("URL: "+ history_url)
+    logger.info("URL: "+ history_url)
     document = scraper.get_doc(scraper, history_url)
     article_links = scraper.get_history_links(scraper, document, 'self.soup.select(".mainArticletitle > a")')
-    print("Records: " + str(len(article_links)))
+    logger.info("Records: " + str(len(article_links)))
     for at_link in article_links:
         # print(at_link['href'])
         if(at_link):
-            scrape = scraper("https://www.globes.co.il"+at_link['href'], globes_config)
+            scrape = scraper("https://www.globes.co.il"+at_link['href'], globes_config, 'globes_history.log')
             scrape.get_data()
 
 

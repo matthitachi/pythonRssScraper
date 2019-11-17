@@ -2,6 +2,8 @@ from xmlparser import Xmlparser
 from pdbmodel import PdbModel
 from scrapermodel import scraper
 from maya import Maya
+from bs4 import BeautifulSoup
+import lxml
 # scraper = scraper
 xmlparser = Xmlparser()
 # db = PdbModel('atscraper')
@@ -22,7 +24,8 @@ for insID in allInstrumenIDs :
     history_url = "https://maya.tase.co.il/reports/company?q=%7B%22DateFrom%22:%222018-11-14T22:00:00.000Z%22,%22DateTo%22:%222019-11-14T21:00:00.000Z%22,%22Page%22:1,%22entity%22:"+str(instrumentId)+",%22events%22:%5B%5D,%22subevents%22:%5B%5D,%22IsBreakingAnnouncement%22:true%7D"
     print("URL: "+ history_url)
     document = scraper.get_doc(scraper, history_url)
-    article_links = scraper.get_history_links(scraper, document, 'self.soup.select("maya-reports .feedItemMessage a")')
+    # document = open("C:\\Users/ITACHI\\PycharmProjects\\Atscraper\\maya_history.html", encoding="utf8").read()
+    article_links = scraper.get_history_links(scraper, document, 'self.soup.select("maya-reports .feedItemMessage > a")')
     print("Records: " + str(len(article_links)))
     for at_link in article_links:
         # print(at_link['href'])

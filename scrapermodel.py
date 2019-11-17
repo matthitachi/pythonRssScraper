@@ -1,30 +1,52 @@
+import os
+
 from bs4 import BeautifulSoup
 import lxml
 import requests
 import re
 from xmlparser import Xmlparser
+import urllib.request
 from urllib.request import urlopen
 from urllib.parse import urlparse
 from pdbmodel import PdbModel
 from dateutil import parser
 from datetime import datetime
 import time
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from webdriver_manager.chrome import ChromeDriverManager
+from Logger import logger
 
 class scraper:
-    def __init__(self, url, scrapedata):
+    def __init__(self, url, scrapedata, logfile=None):
         self.scrapedata = scrapedata
         self.url = url
         doc = self.get_doc(url)
         self.soup = BeautifulSoup(doc, 'lxml')
         xmlparser = Xmlparser()
         db_config = xmlparser.get_db_config('config.xml')
-        self.db = PdbModel(db_config.get("database"))
+        self.db = PdbModel(db_config.get("database"), logfile)
+        self.logger = logger(logfile)
         # print(self.gerUrlSec_id())
         # print(eval('self.soup.find(itemprop="headline").text'))
         # print(eval('self.soup.find(itemprop="description").text'))
         # print(eval('self.soup.find(rel="author").text'))
         # print(eval('self.soup.find("time", itemprop="datePublished").text'))
         # print(len(eval('self.soup.select("ol > li[role=article]")')))
+    def selenium_get_doc(self, link, proxy=None):
+        # driver = webdriver.Chrome(executable_path=os.path.abspath("chromedriver.exe"))
+        options = webdriver.ChromeOptions()
+        options.add_argument('--ignore-certificate-errors')
+        options.add_argument('--incognito')
+        options.add_argument('--headless')
+        if proxy:
+            options.add_argument('--proxy-server = %s' % proxy)
+        driver = webdriver.Chrome(ChromeDriverManager().install(),  chrome_options=options)
+        driver.get(link)
+        page_source =driver.page_source
+        driver.close()
+        return page_source
+
 
     def test(self):
       # print(eval('re.findall(r"[\w\.-]+@[\w\.-]+", self.soup.select("div.articleInfo > a")[0]["href"])[0]'))
@@ -44,8 +66,15 @@ class scraper:
     def trystuff(self):
         print(eval('(1, 2)')[0])
 
-    def get_doc(self, url):
-        html = urlopen(url)
+    def get_doc(self, url, proxy=None):
+        if proxy:
+            proxies = {'http': 'http://%s' %proxy}
+            proxy_support = urllib.request.ProxyHandler(proxies)
+            opener = urllib.request.build_opener(proxy_support)
+            urllib.request.install_opener(opener)
+            html = urlopen(url)
+        else:
+            html = urlopen(url)
         return html.read()
         # return requests.get(url).text
 
@@ -80,7 +109,7 @@ class scraper:
                 alltags.append(chec[0])
 
         alltags = list( dict.fromkeys(alltags) )
-        print('TAGS ==>', alltags)
+        self.logger.info('TAGS ==>'+ str(alltags))
         return alltags
 
         # print(chec)
@@ -92,16 +121,16 @@ class scraper:
 
     def gerUrlSec_id(self):
         sec_id = eval(self.scrapedata['article_sec'])
-        
-        print('secid' + str(self.url))
-        print('secid' + str(sec_id))
+
+        self.logger.info('secid' + str(self.url))
+        self.logger.info('secid' + str(sec_id))
         # sec_id = self.checkInstrumentID(sec_id[0])
         # print(sec_id)
         # return  sec_id[0]
     def test_secid(self):
         chec = self.soup.find_all(onclick=re.compile("document.location.href='/capitalmarket/quote/generalview/(.*?)'"))
         chec = re.findall(r"document.location.href='/capitalmarket/quote/generalview/(.*?)?'", str(chec[0]))
-        print(chec)
+        self.logger.info(chec)
 
     def get_data(self):
         if self.db.articleExist(self.url):
@@ -193,5 +222,5 @@ dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_mi
 # print(scrap.find_secid("self.soup.find_all('a', href=re.compile('/stocks/home/0,7340,L-3959-(.*?)'))", '/stocks/home/0,7340,L-3959-(.*?)?,'))
 
 # scrapr = scraper('https://www.calcalist.co.il/markets/articles/0,7340,L-3771999,00.html', {})
-# #
-# print(scrapr.testParser('17.10.19'))
+#
+# print(scrapr.selenium_get_doc('https://www.google.com'))
