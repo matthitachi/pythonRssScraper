@@ -1,15 +1,15 @@
 <config>
     <database>
-        <user>postgres</user>
-        <database>atscraper</database>
-        <password>qwerty</password>
-        <host>127.0.0.1</host>
-        <port>5432</port>
         <!--<user>postgres</user>-->
-        <!--<database>postgres</database>-->
-        <!--<password>dror9519</password>-->
-        <!--<host>35.195.17.82</host>-->
+        <!--<database>atscraper</database>-->
+        <!--<password>qwerty</password>-->
+        <!--<host>127.0.0.1</host>-->
         <!--<port>5432</port>-->
+        <user>postgres</user>
+        <database>postgres</database>
+        <password>dror9519</password>
+        <host>35.195.17.82</host>
+        <port>5432</port>
     </database>
 
     <scraper>
