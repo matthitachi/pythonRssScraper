@@ -216,7 +216,10 @@ dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_mi
                         dbData['date'] = str(date)
                         dbData['time'] = str(times)
                     else:
-                        dbData['date'] =  str(parser.parse(data[i],dayfirst=True))
+                        try:
+                            dbData['date'] =  str(parser.parse(data[i],dayfirst=True))
+                        except Exception:
+                            dbData['date'] = str(None)
                 else:
                     dbData[i] = str(data[i])
         if len(tags) == 0:
