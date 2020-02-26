@@ -116,6 +116,22 @@ class PdbModel :
         result = self.fetchone(sql)
         return result
 
+    def createAlert(self, data):
+        columns = "("
+        values = "("
+        params = "("
+        for i in data:
+            columns += i + ","
+            values += "'" + self.postgres_escape_string(data[i]) + "',"
+            params += "%s" + ","
+        columns = columns.rstrip(',') + ")"
+        values = values + ")"
+        params = params.rstrip(',') + ")"
+        sql = "insert into scrapealert " + columns + " values " + params + " RETURNING id"
+        insertid = self.execute(sql, eval(values))
+        self.connection.commit()
+        self.close()
+
     def insertScrapeData(self, data, tags):
         # print(data)
         columns = "("

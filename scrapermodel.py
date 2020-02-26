@@ -172,6 +172,20 @@ class scraper:
                 return 1
 
         return None
+    def searchSecurities(self, dbData):
+        data = dbData.copy()
+        sql = 'Select * from securities'
+        allSecurities = self.db.fetchall(sql)
+        for sID in allSecurities:
+            secId = sID[0]
+            secName = sID[1]
+            keywords = self.soup.find_all(string=re.compile(re.escape(secName)))
+            if len(keywords) > 0:
+                for keyword in keywords:
+                    data['secId'] = secId
+                    data['keyword'] = keyword
+                    # print(secId, keyword, "second")
+                    self.db.createAlert(data)
 
     def compute(self, data):
         # print(data)
@@ -205,7 +219,8 @@ dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday, dateobj.tm_hour, dateobj.tm_mi
                         dbData['date'] =  str(parser.parse(data[i],dayfirst=True))
                 else:
                     dbData[i] = str(data[i])
-
+        if len(tags) == 0:
+            self.searchSecurities(dbData)
         self.db.insertScrapeData(dbData, tags)
 
     def testParser(self, dt):

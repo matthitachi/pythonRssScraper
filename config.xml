@@ -19,8 +19,8 @@
             <instrumentid>0</instrumentid>
             <article_sec>re.findall(r"\d+$", str(self.url))[0]</article_sec>
             <data>
-                <header>self.soup.find(itemprop="headline").text</header>
-                <sub_header>self.soup.find(itemprop="description").text</sub_header>
+                <header>self.soup.find(data-test="articleHeaderTitle").text</header>
+                <sub_header>self.soup.find(data-test="articleHeaderSubtitle").text</sub_header>
                 <writer_name>self.soup.find(rel="author").text</writer_name>
                 <!--<writer-mail>2</writer-mail>-->
                 <date>self.soup.find("time", itemprop="datePublished").text</date>
