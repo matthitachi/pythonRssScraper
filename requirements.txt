@@ -20,7 +20,7 @@ hexbytes==0.1.0
 html5lib==1.0.1
 idna==2.7
 lru-dict==1.1.6
-lxml==4.4.0
+lxml==4.6.2
 ndg-httpsclient==0.5.1
 parsimonious==0.8.0
 pbr==4.2.0
