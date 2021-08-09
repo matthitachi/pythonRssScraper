@@ -33,7 +33,7 @@ pyOpenSSL==19.0.0
 pypiwin32==223
 python-dateutil==2.8.0
 pytz==2018.5
-pywin32==223
+pywin32==301
 requests==2.19.1
 rlp==1.0.2
 selenium==3.141.0
